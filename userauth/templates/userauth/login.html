@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blogger</title>
+
+    <!-- font awesome cdn link  -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;500;600900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/login.css' %}" />
+
+  </head>
+  <body>
+
+
+    <header class="header">
+      <a href="/" class="logo"><span>b</span>logger</a>
+
+      <form action="" method="POST" class="search-form">
+        {% csrf_token %}
+        <input
+          type="search"
+          name=""
+          placeholder="search here..."
+          id="search-box"
+        />
+        <label for="search-box" class="fas fa-search"></label>
+      </form>
+    </header>
+    <div class="login-form-bd">
+    {% if messages %}
+        
+    {% for message in messages %}
+    <div class="msg-container">
+      <div class="inner-container">
+        <span class="">
+          <i class="fas fa-bell"></i>
+          {{ message }}
+        </span>
+        <button class="cross-btn" onclick="closeAlert(event)">
+          <span>&times;</span>
+      
+        </button>
+      </div>     
+    </div>
+    {% endfor %}
+  {% endif %}
+      <div class="form-wrapper">
+        <div class="form-container">
+          <h1>Login</h1>
+          <form method="POST"  class="login-form">
+            {% csrf_token %}
+
+            <div class="form-control">
+              <input type="text" name="login_email" required />
+              <label> Email</label>
+            </div>
+
+            <div class="form-control">
+              <input type="password" name="login_pass" required />
+              <label> Password</label>
+            </div>
+            <button class="login-btn">Log in</button>
+            <p class="text">
+              Don't have an account? <a href="{% url 'signup' %}"> Register</a>
+            </p>
+            <p class="text">
+              <a href="{% url "password_reset" %}">Forgot Password?</a>
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- header section ends -->
+
+    <!-- custom js file link  -->
+    <script src="{% static 'js/script.js' %}"></script>
+
+    <script>
+      const labels = document.querySelectorAll(".form-control label");
+      const messageContainer=document.querySelectorAll(".msg-container");
+      let closeAlert=(event)=>{
+console.log(messageContainer);
+
+        messageContainer[0].style.display="none";
+        
+      }
+
+      labels.forEach((label) => {
+        label.innerHTML = label.innerText
+          .split("")
+          .map(
+            (letter, idx) =>
+              `<span style="transition-delay:${idx * 50}ms">${letter}</span>`
+          )
+          .join("");
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blogger</title>
+
+    <!-- font awesome cdn link  -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/login.css' %}" />
+  </head>
+  <body>
+
+
+    <header class="header">
+      <a href="/" class="logo"><span>b</span>logger</a>
+
+      <nav class="navbar">
+        {% comment %} <a href="/#posts">Our blogs</a>
+        <a href="/#contact">contact us</a> {% endcomment %}
+        {% comment %} <a href="newblog">New Blog</a> {% endcomment %}
+
+      </nav>
+
+      {% comment %} <div class="icons">
+        <i class="fas fa-bars" id="menu-bars"></i>
+        <i class="fas fa-search" id="search-icon"></i>
+      </div> {% endcomment %}
+
+      <form action="" method="POST" class="search-form">
+        <input
+          type="search"
+          name=""
+          placeholder="search here..."
+          id="search-box"
+        />
+        <label for="search-box" class="fas fa-search"></label>
+      </form>
+    </header>
+    <div class="login-form-bd">
+
+        {% if messages %}
+          
+      {% for message in messages %}
+      <div class="msg-container">
+        <div class="inner-container">
+          <span class="">
+            <i class="fas fa-bell"></i>
+            {{ message }}
+          </span>
+          <button class="cross-btn" onclick="closeAlert(event)">
+            <span>&times;</span>
+        
+          </button>
+        </div>     
+      </div>
+      {% endfor %}
+    {% endif %}
+
+      <div class="form-wrapper">
+        <div class="form-container">
+          <h1>Register</h1>
+          <form method="POST" autocomplete="off">
+            {% csrf_token %}
+
+            <div class="form-control">
+                <input type="text" name="signup_fullname" required autocomplete="off" />
+                <label> Full name</label>
+            </div>
+
+            <div class="form-control">
+                <input type="text" name="signup_firstname" required />
+                <label> First Name</label>
+            </div>
+
+            <div class="form-control">
+                <input type="text" name="signup_lastname" required />
+                <label> Last Name</label>
+            </div>
+
+            <div class="form-control">
+              <input type="text" name="signup_email" required />
+              <label> Email</label>
+            </div>
+
+            <div class="form-control">
+              <input type="text" name="domain" required />
+              <label> Enter Domain of Interest</label>
+            </div>
+
+            <div class="form-control">
+              <input type="password" name="signup_pass" required />
+              <label> Password</label>
+            </div>
+
+            <div class="form-control">
+              <input type="password" name="signup_pass2" required />
+              <label>Confirm Password</label>
+            </div>
+            <!-- <div class="form-control">
+              <input type="file" accept="image/*" name="profile_image" required class="profile_image" />
+              <label>Upload Profile Image</label>
+            </div> -->
+
+            <button class="login-btn">Register</button>
+
+            <p class="text">
+              Already have an account? <a href="{% url 'login' %}"> Login</a>
+            </p>
+
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- header section ends -->
+
+    <!-- custom js file link  -->
+    <script src="{% static 'js/script.js' %}"></script>
+
+    <script>
+      const labels = document.querySelectorAll(".form-control label");
+
+      let closeAlert=(event)=>{
+        let element = event.target;
+        while(element.nodeName !== "BUTTON"){
+          element = element.parentNode;
+        }
+        element.parentNode.parentNode.removeChild(element.parentNode);
+      }
+
+      labels.forEach((label) => {
+        label.innerHTML = label.innerText
+          .split("")
+          .map(
+            (letter, idx) =>
+              `<span style="transition-delay:${idx * 50}ms">${letter}</span>`
+          )
+          .join("");
+      });
+    </script>
+  </body>
+</html>

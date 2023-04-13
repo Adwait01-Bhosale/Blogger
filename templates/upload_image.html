@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="{% static 'css/upload_image.css' %}" />
+<!-- <link rel="stylesheet" href="{% static 'css/style.css' %}" /> -->
+<link rel="stylesheet" href="{% static 'css/style.css' %}" />
+<link rel="stylesheet" href="{% static 'css/login.css' %}" />
+
+
+<title>Blogger</title>
+</head>
+<body>
+  <header class="header">
+    <a href="#" class="logo"><span>b</span>logger</a>
+
+    <nav class="navbar">
+      {% if user.is_authenticated %}
+      <a href="{% url 'dashboard' %}">Dashboard</a>
+      {% endif %}
+
+      <a href="{% url 'home' %}">Blogs</a>
+      <a href="#contact">Contact us</a>
+      {% comment %} <a href="newblog">New Blog</a> {% endcomment %}
+
+      {% if user.is_authenticated %}
+           
+      <a href="{% url 'newblog' %}">New Blog</a>
+
+      {% endif %}
+
+      {% if user.is_authenticated %}
+           
+      <a href="{% url 'signout' %}">Signout</a>
+      
+      {% else %}
+
+      <a href="{% url 'login' %}">Login</a>
+          
+      {% endif %}
+
+      
+
+      {% if user.is_authenticated %}
+          <h1 style="font-size:1.5rem;padding-left: 0.5rem;padding-right: 0.5rem;">Hello, {{user.fullname}}</h1>
+
+      {% endif %}
+    </nav>
+
+   
+  </header>
+
+  <div class="login-form-bd">
+
+    {% if messages %}
+      
+  {% for message in messages %}
+  <div class="msg-container">
+    <div class="inner-container">
+      <span class="">
+        <i class="fas fa-bell"></i>
+        {{ message }}
+      </span>
+      <button class="cross-btn" onclick="closeAlert(event)">
+        <span>&times;</span>
+    
+      </button>
+    </div>     
+  </div>
+  {% endfor %}
+{% endif %}
+
+  
+<form method = "post" enctype="multipart/form-data">
+  {{ form.as_p }}
+  {% csrf_token %}
+
+  <button type="submit">Upload</button>
+</form>
+
+<script src="{% static 'js/script.js' %}"></script>
+
+    <script>
+      const labels = document.querySelectorAll(".form-control label");
+      const messageContainer=document.querySelectorAll(".msg-container");
+      let closeAlert=(event)=>{
+console.log(messageContainer);
+
+        messageContainer[0].style.display="none";
+        
+      }
+
+      labels.forEach((label) => {
+        label.innerHTML = label.innerText
+          .split("")
+          .map(
+            (letter, idx) =>
+              `<span style="transition-delay:${idx * 50}ms">${letter}</span>`
+          )
+          .join("");
+      });
+    </script>
+</body>
+</html>

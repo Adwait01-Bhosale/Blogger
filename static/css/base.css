@@ -1,0 +1,126 @@
+body {
+    background: #fafafa;
+    color: #333333;
+    margin-top: 7rem;
+    /* font-size: 2rem !important; */
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    color: #444444;
+    /* font-size: 3rem !important; */
+  }
+  .media-body h1{
+    font-size:3rem;
+    text-align:center;
+    margin-bottom:3rem
+  }
+  .media-body h2{
+    font-size:1.5rem;
+    margin-bottom: 1.3rem;
+  }
+  ul {
+    margin: 0;
+  }
+  .dashboard_container{
+    /* height:100vh; */
+    /* width:100vw; */
+    /* background: black; */
+    /* display:flex; */
+    /* align-items:center; */
+    /* justify-content:center; */
+  }
+  .bg-steel {
+    background-color: #5f788a;
+  }
+  
+  .site-header .navbar-nav .nav-link {
+    color: #0c3045;
+  }
+  
+  .site-header .navbar-nav .nav-link:hover {
+    color: #ffffff;
+  }
+  
+  .site-header .navbar-nav .nav-link.active {
+    font-weight: 500;
+  }
+  .row{
+    margin-right: 0;
+    margin-left: 0;
+  }
+  .content-section {
+    background: #316498;
+    /* padding: 10px 20px; */
+    border: 1px solid #dddddd;
+    border-radius: 3px;
+    /* margin-bottom: 20px; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 98vw;
+    height: 88vh;
+  }
+  .media{
+    /* background:red; */
+    box-shadow: 3px 0.25rem 1.25rem rgba(27, 27, 27, 0.2);
+    padding:6rem ;
+    border-radius:20px;
+    background:white;
+  }
+  .media-body{
+    margin-left:4rem;
+  }
+  .article-title {
+    color: #444444;
+  }
+  
+  a.article-title:hover {
+    color: #428bca;
+    text-decoration: none;
+  }
+  
+  .article-content {
+    white-space: pre-line;
+  }
+  
+  .article-img {
+    height: 65px;
+    width: 65px;
+    margin-right: 16px;
+  }
+  
+  .article-metadata {
+    padding-bottom: 1px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid #e3e3e3
+  }
+  
+  .article-metadata a:hover {
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .article-svg {
+    width: 25px;
+    height: 25px;
+    vertical-align: middle;
+  }
+  
+  .account-img {
+    height: 125px;
+    width: 125px;
+    margin-right: 20px;
+    margin-bottom: 16px;
+  }
+  
+  .account-heading {
+    font-size: 1.5rem;
+    color:gray;
+  }
+
+  body{
+    display: flex;
+  }
+  p{
+    /* font-size: 1.5rem !important; */
+  }
