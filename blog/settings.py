@@ -33,7 +33,7 @@ SECRET_KEY = 'django-insecure-0071f%^nu#6ut4q1rhxuep!!)2-^-^jr(oy2yw!olae@j)=*zb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 MESSAGE_TAGS = {
