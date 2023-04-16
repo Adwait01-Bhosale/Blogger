@@ -1,9 +1,9 @@
 from django.contrib.auth.forms import SetPasswordForm
-from django.contrib.auth import get_user_model
-from django.db import models  
-from django.forms import fields  
+from django.contrib.auth import get_user_model 
 from .models import Image
 from django import forms 
+
+
 
 class SetPasswordForm(SetPasswordForm):
     class Meta:

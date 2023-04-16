@@ -69,11 +69,15 @@
     <section class="container" id="posts">
       <div class="posts-container">
 
-        {% for title, body in myblogs_contents.items %}
+        {% for title, body in blog_data.items %}
         <div class="post">
           <!-- <img src="images/blog-1.jpg" alt="" class="image"> -->
           <img src="https://picsum.photos/300/201" alt="" class="image" />
 
+          <div class="date">
+            <i class="far fa-clock"></i>
+            <span>1st may, 2021</span>
+          </div>
           <h3 class="title">
             {{ title }}
           </h3>
@@ -83,7 +87,15 @@
           <div class="links">
             <a href="#" class="user">
               <i class="far fa-user"></i>
-              <span>by {{ name_of_author }}</span>
+              <span>by {{ admin }}</span>
+            </a>
+            <a href="#" class="icon">
+              <i class="far fa-comment"></i>
+              <span>(45)</span>
+            </a>
+            <a href="#" class="icon">
+              <i class="far fa-share-square"></i>
+              <span>(29)</span>
             </a>
           </div>
         </div>

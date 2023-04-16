@@ -22,7 +22,7 @@ class my_dictionary(dict):
   def add(self, key, value):
     self[key] = value
     
-    
+
 def add_values_in_dict(sample_dict, key, list_of_values):
     ''' Append multiple values to a key in 
         the given dictionary '''
@@ -52,11 +52,12 @@ def newblog(request):
         content = request.POST['content']
         # print(author_name, title, content, datetime.today())
         user=request.user
-        ins=BlogData(author=author_name, title=title, domain=domain ,content=content, created_at=datetime.today(), user=request.user)
+        ins=BlogData(author=author_name, logged_in_author=request.user ,title=title, domain=domain ,content=content, created_at=datetime.today(), user=request.user)
         ins.save()
     
     return render(request, 'newblog.html')
 
+@login_required
 def home(request):
     
     if request.method=="POST":
@@ -101,44 +102,7 @@ def home(request):
                 context_blog_title.append(title_data[i])
             
             blog_title_dict=my_dictionary()
-            
-            content_author_dict={}
-            
-            # for i in range(len(title_data)):
-            #     content_blog_authors=BlogData.objects.get(content=context_blog_data[i][0]).author
-            #     print(f"Name of the author is: {content_blog_authors}")
-                
-            #     author_blog_content=BlogData.objects.get(author=content_blog_authors).content
-                
-            #     print("-------------------------")
-            #     print(author_blog_content)
-                # content_blog_title=BlogData.objects.get(content=author_blog_content[i]).title
-                # print("-------------------")
-                # print(f"This is the title of respective blog content: {content_blog_title}")
-                # content_author_dict=add_values_in_dict(content_author_dict,content_blog_authors,[content_blog_title, author_blog_content])
-                
-            # content_blog_authors=BlogData.objects.get(content=context_blog_data[0][0]).author
-            # author_blog_content=BlogData.objects.get(author=content_blog_authors).content
-            
-            # print("------------------------")
-            
-            print(f"Final dictionary of authors and their content: {content_author_dict}")
-            
-            # print("---------------------------")
-            
-            # print(f"Check the author name: {content_blog_authors}")
-            
-            print("------------------------")
-            # print(f"Checking the values in the dictionary {content_author_dict.items()}")
-            
-            for key,vals in content_author_dict.items():
-                for i in range(len(content_author_dict)):
-                    print(f"Key is: {key}")
-                    print(f"Title: {vals[0]}")
-                    print(f"Desc: {vals[1]}")
-            
-            
-            
+        
             user['show'] = True
 
             for i in range(len(context_blog_data)):
@@ -159,6 +123,7 @@ def home(request):
     return render(request, 'home.html')
 
 
+@login_required
 def dashboard(request):
     
     if request.method=="POST":
@@ -179,47 +144,37 @@ def dashboard(request):
     else:
         
         if request.user.is_authenticated:
-            images=individualsData.objects.all()
-            # urls=images.values_list('image',flat=True)
-  
-            
-            list_users=individualsData.objects.values_list(flat=True)
             image_path=""
             users_doi=""
             
             new_list_users=Image.objects.values_list(flat=True)
-            print(f"New list of users is: {new_list_users[0]}")
             
             for new_users in new_list_users:
                 user_name=Image.objects.get(id=new_users).user
-                print(f"Name of New users is: {user_name}")
                 users_doi=Account.objects.get(fullname=request.user).domain
                 
                 if str(request.user) == str(user_name):
-                    # print("Yesss You are innn!!")
                     image_path=Image.objects.get(id=new_users).img
-                    print(f"Domain of Interest: {users_doi}")
-                    print(f"Logged in users image path is: {user_name} {image_path}")
                     break
             
-            # for users in list_users:
-            #     user_name=individualsData.objects.get(id=users).user
-            #     users_doi=Account.objects.get(fullname=request.user).domain
-            #     if str(request.user) == str(user_name):
-            #         # print("Yesss You are innn!!")
-            #         image_path=individualsData.objects.get(id=users).image
-            #         print(f"Domain of Interest: {users_doi}")
-            #         print(f"Logged in users image path is: {user_name} {image_path}")
-            #         break
-            #     else:
-            #         # print("Oooppppss!!!")
-            #         pass
+            count=0
+            list_of_users=BlogData.objects.values_list(flat=True)
+            author_names=[]
+            for users in list_of_users:
+                user_name=BlogData.objects.get(id=users).user
+                author_name=BlogData.objects.get(id=users).author
+                author_names.append(author_name)
+                if str(user_name)==str(request.user):
+                    count+=1
 
+            print(f"List of authors is: {author_names}")
             return render(request,'profile.html', context={'images':"media/"+str(image_path),
-                                                           'domain_of_interest':users_doi})
+                                                           'domain_of_interest':users_doi,
+                                                           'count':count})
     
     return render(request, 'profile.html')
 
+@login_required
 def upload_image(request):
     try:
         if request.method == 'POST':
@@ -253,47 +208,34 @@ def change_password(request):
         'form': form
     })
     
-
+@login_required
 def myblogs(request):
     
     users = Account.objects.filter(is_admin=False).values('fullname', 'id')
     users = list(users)
     
+    my_blogs_title_content=my_dictionary()
+    author_name=""
+    count=0
+    
     for user in users:
         if request.user.is_authenticated:
+            list_of_users=BlogData.objects.values_list(flat=True)
+            for users in list_of_users:
+                user_name=BlogData.objects.get(id=users).user
+                author_blog_title=BlogData.objects.get(id=users).title
+                author_blog_content=BlogData.objects.get(id=users).content
+                if str(user_name)==str(request.user):
+                    count+=1
+                    author_name=BlogData.objects.get(id=users).author
+                    my_blogs_title_content.add(author_blog_title,author_blog_content)
             
-            content_data = BlogData.objects.order_by('submitted_on').values_list('content')
-            context_blog_data=[]
+            return render(request, "myblogs.html", context={'myblogs_contents':my_blogs_title_content,
+                                                            'name_of_author':author_name})
             
-            for i in range (len(content_data)):
-                context_blog_data.append(content_data[i])
-            
-            print(len(context_blog_data))
-            title_data = BlogData.objects.values_list('title')
-            context_blog_title=[]
-            
-            for i in range (len(title_data)):
-                context_blog_title.append(title_data[i])
-            
-            blog_title_dict=my_dictionary()            
-            
-            user['show'] = True            
-
-            for i in range(len(context_blog_data)):
-                if i==4:
-                    break
-                else:
-                    blog_title_dict.add(context_blog_title[i][0], context_blog_data[i][0])
-            return render(request, 'home.html', context={'blog_data':blog_title_dict,
-                                                         'admin':request.user})
         else:
             user['show'] = False
             user['content'] = "Add some Content for the blog!"
-    
-    if request.user.is_authenticated:
-        print("Logged in!!")
-        mydata = BlogData.objects.filter(user=request.user).values()
-        print(mydata)
     else:
         print("Not logged in!")
     return render(request,"myblogs.html")
