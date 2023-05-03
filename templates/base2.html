@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{%block title%}Awesome Blog{%endblock%}</title>
+	{% load static %}
+
+	<link rel="stylesheet" type="text/css" href="{% static "css/update.css" %}">
+</head>
+<body>
+
+	<header class="site_header"> 
+		<div class="site_title">
+			<h1><a href="{% url 'home'%}">Awesome Blog</a></h1>
+			<div class="title_menu"> 
+			</div>
+		</div>
+	</header>
+
+	<div class="content_wrapper">
+		<div class="content">
+			{% block content %}
+				<h2>In Base Template</h2>
+			{% endblock%}
+		</div>
+		<div class="sidebar">
+		</div>
+	</div>
+
+</body>
+</html>

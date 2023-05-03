@@ -4,7 +4,6 @@ from home.models import *
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate,login, logout
 from utils.decorator import login_required_message
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
@@ -15,6 +14,9 @@ from home.forms import ImageForm, Update
 from django.shortcuts import (get_object_or_404,
                               render,
                               HttpResponseRedirect)
+from django.views.generic import UpdateView
+from django.urls import reverse_lazy
+
 
 class my_dictionary(dict):
   # __init__ function
@@ -24,7 +26,12 @@ class my_dictionary(dict):
   # Function to add key:value
   def add(self, key, value):
     self[key] = value
-    
+
+class PostEditView(UpdateView):
+    model = BlogData
+    template_name = 'edit_post.html'
+    fields = ['title', 'content']
+    success_url = reverse_lazy('myblogs')
 
 def add_values_in_dict(sample_dict, key, list_of_values):
     ''' Append multiple values to a key in 

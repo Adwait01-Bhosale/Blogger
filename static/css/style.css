@@ -559,6 +559,48 @@ a{
   }
 }
 
+.new_post {
+	font-family:sans-serif;
+	background: #f3eeeecf;
+	padding: 1rem;
+}
+.new_post h1 {
+	font-size: 2rem;
+}
+.new_post form {
+	padding: 1rem;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+.new_post form p {
+	margin-bottom: 1rem;
+}
+
+.new_post form input,.new_post form textarea {
+	padding: 1rem;
+	border:none;
+	width: 98%;
+
+}
+.new_post label {
+	display: block;
+	font-size: 18px;
+}
+.new_post button {
+	cursor: pointer;
+	padding: 1rem;
+	font-size: 1.2rem;
+	border:none;
+	background: #3F51B5;
+	color: #fff;
+	font-family: sans-serif;
+	outline: none;
+}
+.new_post button:hover {
+	background: #e91e63;
+}
+
 @media (max-width: 450px) {
   html {
     font-size: 50%;
