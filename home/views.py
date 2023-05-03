@@ -11,7 +11,10 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.urls import reverse_lazy
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
-from home.forms import ImageForm
+from home.forms import ImageForm, Update
+from django.shortcuts import (get_object_or_404,
+                              render,
+                              HttpResponseRedirect)
 
 class my_dictionary(dict):
   # __init__ function
@@ -207,7 +210,9 @@ def change_password(request):
     return render(request, 'change_password.html', {
         'form': form
     })
-    
+
+
+
 @login_required
 def myblogs(request):
     
@@ -216,27 +221,102 @@ def myblogs(request):
     
     my_blogs_title_content=my_dictionary()
     author_name=""
-    count=0
-    
-    for user in users:
-        if request.user.is_authenticated:
-            list_of_users=BlogData.objects.values_list(flat=True)
-            for users in list_of_users:
-                user_name=BlogData.objects.get(id=users).user
-                author_blog_title=BlogData.objects.get(id=users).title
-                author_blog_content=BlogData.objects.get(id=users).content
-                if str(user_name)==str(request.user):
-                    count+=1
-                    author_name=BlogData.objects.get(id=users).author
-                    my_blogs_title_content.add(author_blog_title,author_blog_content)
+
+
+    if request.user.is_authenticated:
+        
+        list_of_users=BlogData.objects.values_list(flat=True)
+
+        
+        data_dict={}
+        data_list=[]
+        
+        for users in list_of_users:
             
-            return render(request, "myblogs.html", context={'myblogs_contents':my_blogs_title_content,
-                                                            'name_of_author':author_name})
+            user_name=BlogData.objects.get(id=users).user
             
-        else:
-            user['show'] = False
-            user['content'] = "Add some Content for the blog!"
+            author_blog_title=BlogData.objects.get(id=users).title
+            author_blog_content=BlogData.objects.get(id=users).content
+            blog_submittedon=BlogData.objects.get(id=users).submitted_on
+            # print(f"Blog submission dates: {blog_submittedon}")
+            
+            if str(user_name)==str(request.user):
+                print("USER IDS ARE: \n")
+                print(users)
+                print(blog_submittedon)
+                author_name=BlogData.objects.get(id=users).author
+                my_blogs_title_content.add(author_blog_title,author_blog_content)
+                
+                data_list.append(author_blog_title)
+                data_list.append(author_blog_content)
+                data_list.append(blog_submittedon)
+                data_dict[users]=data_list
+
+        # print(data_dict.values())
+        
+        print("---------------------")
+        for key, values in data_dict.items():
+            for val in values:
+                print(val)
+        
+        # return render(request, "myblogs.html", context={'myblogs_contents':my_blogs_title_content,
+        #                                                 'name_of_author':author_name})
+        return render(request, "myblogs.html", context={'myblogs_contents':my_blogs_title_content,
+                                                        'name_of_author':author_name})
+            
     else:
         print("Not logged in!")
     return render(request,"myblogs.html")
 
+@login_required
+def update_view(request, id):
+    # dictionary for initial data with
+    # field names as keys
+    print("--------------------")
+    context={}
+    
+    # list_of_users=BlogData.objects.values_list(flat=True)
+    # print(list_of_users)
+ 
+    # fetch the object related to passed id
+    obj = get_object_or_404(BlogData, id = id)
+    
+    # pass the object as instance in form
+    form = Update(request.POST or None, instance = obj)
+ 
+    users = Account.objects.filter(is_admin=False).values('fullname', 'id')
+    users = list(users)
+    ids_list=my_dictionary()
+    
+    count=0
+    
+    if request.user.is_authenticated:
+        list_of_users=BlogData.objects.values_list(flat=True)
+        print(f"List of users are: {list_of_users}")
+        for users in list_of_users:
+            user_name=BlogData.objects.get(id=users).user
+            author_blog_title=BlogData.objects.get(id=users).title
+            
+            if str(user_name)==str(request.user):
+                print(f"Count is: {count}")
+                print(f"Title for user id {users} is {author_blog_title}")
+                
+                ids_list.add(users, author_blog_title)
+                count+=1
+    
+    print(f"User ID's if they have published a blog: {ids_list.values()}")
+    
+    if form.is_valid():
+        form.save()
+        return render(request, "myblogs.html")
+ 
+    # add form dictionary to context
+    context["form"] = form
+ 
+    return render(request, "update_post.html", context)
+
+
+def delete_post(request, post_id=None):
+    post_to_delete=BlogData.objects.get(id=post_id)
+    post_to_delete.delete()
+    return redirect(request, 'myblogs.html`')
